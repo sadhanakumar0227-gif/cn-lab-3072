@@ -1,0 +1,75 @@
+
+import java.io.*;
+import java.net.*;
+import java.util.*;
+
+class Serverarp
+{
+    public static void main(String args[])
+    {
+        try
+        {
+            ServerSocket obj=new ServerSocket(5000);
+            Socket obj1=obj.accept();
+
+            while(true)
+            {
+                DataInputStream din=new DataInputStream(obj1.getInputStream());
+                DataOutputStream dout=new DataOutputStream(obj1.getOutputStream());
+
+                BufferedReader br=new BufferedReader(new InputStreamReader(din));
+                String str=br.readLine();
+
+                String ip[]={"165.165.80.80","165.165.79.1"};
+                String mac[]={"6A:08:AA:C2","8A:BC:E3:FA"};
+
+                for(int i=0;i<ip.length;i++)
+                {
+                    if(str.equals(ip[i]))
+                    {
+                        dout.writeBytes(mac[i]+'\n');
+                        break;
+                    }
+                }
+            }
+        }
+        catch(Exception e)
+        {
+            System.out.println(e);
+        }
+    }
+}
+import java.io.*;
+import java.net.*;
+import java.util.*;
+
+class Clientarp
+{
+    public static void main(String args[])
+    {
+        try
+        {
+            BufferedReader in=new BufferedReader(new InputStreamReader(System.in));
+            Socket clsct=new Socket("127.0.0.1",5000);
+
+            DataInputStream din=new DataInputStream(clsct.getInputStream());
+            DataOutputStream dout=new DataOutputStream(clsct.getOutputStream());
+
+            System.out.println("Enter the Logical address(IP):");
+            String str1=in.readLine();
+
+            dout.writeBytes(str1+'\n');
+
+            BufferedReader br=new BufferedReader(new InputStreamReader(din));
+            String str=br.readLine();
+
+            System.out.println("The Physical Address is: "+str);
+
+            clsct.close();
+        }
+        catch (Exception e)
+        {
+            System.out.println(e);
+        }
+    }
+}
